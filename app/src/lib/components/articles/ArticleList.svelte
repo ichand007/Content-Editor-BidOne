@@ -4,6 +4,12 @@
   import ArticleFilters from './ArticleFilters.svelte';
   import ArticleRow from './ArticleRow.svelte';
 
+  interface Props {
+    onedit?: (article: Article) => void;
+  }
+
+  let { onedit }: Props = $props();
+
   let searchText = $state('');
   let statusFilter = $state('');
 
@@ -29,8 +35,7 @@
   }
 
   function onEdit(article: Article) {
-    // Add/Edit modal wired up in a later step
-    console.log('edit', article);
+    onedit?.(article);
   }
 
   function onDelete(article: Article) {
