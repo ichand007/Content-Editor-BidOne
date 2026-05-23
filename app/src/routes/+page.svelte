@@ -1,16 +1,24 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import type { Article, ArticleStatus } from '$lib/types/article';
-  import { loadArticles, addArticle, editArticle } from '$lib/stores/articles';
+  import { loadArticles, addArticle, editArticle, removeArticle } from '$lib/stores/articles';
   import ArticleList from '$lib/components/articles/ArticleList.svelte';
   import ArticleForm from '$lib/components/articles/ArticleForm.svelte';
   import Modal from '$lib/components/ui/Modal.svelte';
+  import ConfirmDialog from '$lib/components/ui/ConfirmDialog.svelte';
   import Button from '$lib/components/ui/Button.svelte';
 
   let modalOpen = $state(false);
   let editingArticle = $state<Article | null>(null);
+  let deletingArticle = $state<Article | null>(null);
 
   const modalTitle = $derived(editingArticle ? 'Edit Article' : 'Add Article');
+  const confirmOpen = $derived(deletingArticle !== null);
+  const deleteMessage = $derived(
+    deletingArticle
+      ? `Are you sure you want to delete '${deletingArticle.title}'? This action cannot be undone.`
+      : ''
+  );
 
   onMount(() => {
     loadArticles();
@@ -40,6 +48,21 @@
     }
     closeModal();
   }
+
+  function openDeleteConfirm(article: Article) {
+    deletingArticle = article;
+  }
+
+  async function handleConfirmDelete() {
+    if (deletingArticle) {
+      await removeArticle(deletingArticle.id);
+    }
+    deletingArticle = null;
+  }
+
+  function handleCancelDelete() {
+    deletingArticle = null;
+  }
 </script>
 
 <div class="min-h-screen bg-gray-50 dark:bg-gray-950">
@@ -53,7 +76,7 @@
   </header>
 
   <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-    <ArticleList onedit={openEditModal} />
+    <ArticleList onedit={openEditModal} ondelete={openDeleteConfirm} />
   </main>
 </div>
 
@@ -64,3 +87,11 @@
     oncancel={closeModal}
   />
 </Modal>
+
+<ConfirmDialog
+  open={confirmOpen}
+  title="Delete Article"
+  message={deleteMessage}
+  onconfirm={handleConfirmDelete}
+  oncancel={handleCancelDelete}
+/>

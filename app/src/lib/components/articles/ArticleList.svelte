@@ -6,9 +6,10 @@
 
   interface Props {
     onedit?: (article: Article) => void;
+    ondelete?: (article: Article) => void;
   }
 
-  let { onedit }: Props = $props();
+  let { onedit, ondelete }: Props = $props();
 
   let searchText = $state('');
   let statusFilter = $state('');
@@ -39,8 +40,7 @@
   }
 
   function onDelete(article: Article) {
-    // Delete action wired up in a later step
-    console.log('delete', article);
+    ondelete?.(article);
   }
 </script>
 
