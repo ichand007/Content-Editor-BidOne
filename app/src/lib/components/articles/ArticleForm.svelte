@@ -13,7 +13,7 @@
 
   interface Props {
     article?: Article | null;
-    onsave?: (data: SaveData) => void;
+    onsave?: (data: SaveData) => void | Promise<void>;
     oncancel?: () => void;
   }
 
@@ -23,9 +23,12 @@
   let author = $state('');
   let status = $state<string>('Draft');
   let submitted = $state(false);
+  let saving = $state(false);
   let errors = $state({ title: null as string | null, author: null as string | null, status: null as string | null });
 
-  const saveLabel = $derived(article === null ? 'Add Article' : 'Save Changes');
+  const saveLabel = $derived(
+    saving ? 'Saving…' : (article === null ? 'Add Article' : 'Save Changes')
+  );
 
   // Reset form fields whenever the article prop changes (open/close cycles)
   $effect(() => {
@@ -33,6 +36,7 @@
     author = article?.author ?? '';
     status = article?.status ?? 'Draft';
     submitted = false;
+    saving = false;
     errors = { title: null, author: null, status: null };
   });
 
@@ -41,7 +45,7 @@
     { value: 'Draft', label: 'Draft' },
   ];
 
-  function handleSubmit(e: SubmitEvent) {
+  async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
     submitted = true;
 
@@ -56,7 +60,12 @@
     const hasErrors = result.title !== null || result.author !== null || result.status !== null;
     if (hasErrors) { return; }
 
-    onsave?.({ title, author, status: status as ArticleStatus });
+    saving = true;
+    try {
+      await onsave?.({ title, author, status: status as ArticleStatus });
+    } finally {
+      saving = false;
+    }
   }
 </script>
 
@@ -83,10 +92,10 @@
   />
 
   <div class="flex justify-end gap-3 pt-2">
-    <Button type="button" variant="secondary" onclick={() => oncancel?.()}>
+    <Button type="button" variant="secondary" disabled={saving} onclick={() => oncancel?.()}>
       Cancel
     </Button>
-    <Button type="submit" variant="primary">
+    <Button type="submit" variant="primary" disabled={saving}>
       {saveLabel}
     </Button>
   </div>
