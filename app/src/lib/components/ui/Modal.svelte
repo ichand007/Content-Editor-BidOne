@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onDestroy, tick } from 'svelte';
+  import { fade, scale } from 'svelte/transition';
   import type { Snippet } from 'svelte';
 
   interface Props {
@@ -77,10 +78,12 @@
 {#if open}
   <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
   <div
+    transition:fade={{ duration: 200 }}
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
     onclick={onBackdropClick}
   >
     <div
+      transition:scale={{ duration: 200, start: 0.95 }}
       bind:this={dialogEl}
       role="dialog"
       aria-modal="true"
