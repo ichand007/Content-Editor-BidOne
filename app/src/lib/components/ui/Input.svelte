@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  interface Props {
+    label: string;
+    value?: string;
+    error?: string | null;
+    placeholder?: string;
+    onchange?: (value: string) => void;
+  }
 
-  export let label: string;
-  export let value: string = '';
-  export let error: string | null = null;
-  export let placeholder: string = '';
-
-  const dispatch = createEventDispatcher<{ change: string }>();
+  let { label, value = $bindable(''), error = null, placeholder = '', onchange }: Props = $props();
 
   const id = `input-${Math.random().toString(36).slice(2)}`;
 </script>
@@ -30,7 +31,7 @@
       {error
         ? 'border-red-500 focus:ring-red-500 dark:border-red-400'
         : 'border-gray-300 dark:border-gray-600'}"
-    on:input={() => dispatch('change', value)}
+    oninput={() => onchange?.(value)}
   />
 
   {#if error}

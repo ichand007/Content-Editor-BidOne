@@ -1,13 +1,17 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import type { Snippet } from 'svelte';
 
-  export let variant: 'primary' | 'secondary' | 'danger' = 'primary';
-  export let disabled: boolean = false;
-  export let type: 'button' | 'submit' | 'reset' = 'button';
+  interface Props {
+    variant?: 'primary' | 'secondary' | 'danger';
+    disabled?: boolean;
+    type?: 'button' | 'submit' | 'reset';
+    onclick?: (e: MouseEvent) => void;
+    children?: Snippet;
+  }
 
-  const dispatch = createEventDispatcher<{ click: MouseEvent }>();
+  let { variant = 'primary', disabled = false, type = 'button', onclick, children }: Props = $props();
 
-  const variantClasses: Record<typeof variant, string> = {
+  const variantClasses: Record<'primary' | 'secondary' | 'danger', string> = {
     primary:
       'bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600',
     secondary:
@@ -20,8 +24,8 @@
 <button
   {type}
   {disabled}
+  {onclick}
   class="inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed dark:focus:ring-offset-gray-900 {variantClasses[variant]}"
-  on:click={(e) => dispatch('click', e)}
 >
-  <slot />
+  {@render children?.()}
 </button>

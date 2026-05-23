@@ -1,7 +1,11 @@
 <script lang="ts">
   import type { ArticleStatus } from '$lib/types/article';
 
-  export let status: ArticleStatus;
+  interface Props {
+    status: ArticleStatus;
+  }
+
+  let { status }: Props = $props();
 
   const classes: Record<ArticleStatus, string> = {
     Published:

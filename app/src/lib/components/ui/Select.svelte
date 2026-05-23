@@ -1,8 +1,13 @@
 <script lang="ts">
-  export let label: string;
-  export let value: string = '';
-  export let options: { value: string; label: string }[] = [];
-  export let error: string | null = null;
+  interface Props {
+    label: string;
+    value?: string;
+    options?: { value: string; label: string }[];
+    error?: string | null;
+    onchange?: (value: string) => void;
+  }
+
+  let { label, value = $bindable(''), options = [], error = null, onchange }: Props = $props();
 
   const id = `select-${Math.random().toString(36).slice(2)}`;
 </script>
@@ -25,6 +30,7 @@
       {error
         ? 'border-red-500 focus:ring-red-500 dark:border-red-400'
         : 'border-gray-300 dark:border-gray-600'}"
+    onchange={() => onchange?.(value)}
   >
     {#each options as option (option.value)}
       <option value={option.value}>{option.label}</option>
