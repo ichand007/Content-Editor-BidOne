@@ -13,7 +13,7 @@
 
   let { open = false, title, onclose, children, footer }: Props = $props();
 
-  let dialogEl: HTMLDivElement;
+  let dialogEl: HTMLDivElement = $state();
   let previouslyFocused: HTMLElement | null = null;
 
   // Focusable element selector used for tab trapping
@@ -76,8 +76,9 @@
 <svelte:window onkeydown={open ? onKeydown : undefined} />
 
 {#if open}
-  <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
+  <!-- svelte-ignore a11y_click_events_have_key_events -->
   <div
+    role="presentation"
     transition:fade={{ duration: 200 }}
     class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
     onclick={onBackdropClick}
