@@ -3,6 +3,7 @@
   import type { Article } from '$lib/types/article';
   import ArticleFilters from './ArticleFilters.svelte';
   import ArticleRow from './ArticleRow.svelte';
+  import Pagination from '$lib/components/ui/Pagination.svelte';
 
   interface Props {
     onedit?: (article: Article) => void;
@@ -11,8 +12,11 @@
 
   let { onedit, ondelete }: Props = $props();
 
+  const PAGE_SIZE = 8;
+
   let searchText = $state('');
   let statusFilter = $state('');
+  let currentPage = $state(1);
 
   const isFiltering = $derived(searchText.trim() !== '' || statusFilter !== '');
 
@@ -29,12 +33,20 @@
     })
   );
 
+  const totalPages = $derived(Math.ceil(filtered.length / PAGE_SIZE));
+
+  const paginated = $derived(
+    filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
+  );
+
   function onSearch(value: string) {
     searchText = value;
+    currentPage = 1;
   }
 
   function onFilter(value: string) {
     statusFilter = value;
+    currentPage = 1;
   }
 
   function onEdit(article: Article) {
@@ -126,12 +138,19 @@
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-100 bg-white dark:divide-gray-700 dark:bg-gray-900">
-          {#each filtered as article (article.id)}
+          {#each paginated as article (article.id)}
             <ArticleRow {article} onedit={onEdit} ondelete={onDelete} />
           {/each}
         </tbody>
       </table>
     </div>
+    {#if totalPages > 1}
+      <Pagination
+        {currentPage}
+        {totalPages}
+        onpagechange={(page) => { currentPage = page; }}
+      />
+    {/if}
   {/if}
   </div>
 </div>
