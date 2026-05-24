@@ -35,10 +35,10 @@
   </td>
   <td class="px-4 py-3">
     <div class="flex items-center gap-2">
-      <Button variant="secondary" type="button" onclick={() => onedit?.(article)}>
+      <Button variant="secondary" type="button" ariaLabel="Edit {article.title}" onclick={() => onedit?.(article)}>
         Edit
       </Button>
-      <Button variant="danger" type="button" onclick={() => ondelete?.(article)}>
+      <Button variant="danger" type="button" ariaLabel="Delete {article.title}" onclick={() => ondelete?.(article)}>
         Delete
       </Button>
     </div>

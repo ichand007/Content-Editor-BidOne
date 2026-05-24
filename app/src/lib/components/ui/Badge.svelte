@@ -15,6 +15,9 @@
   };
 </script>
 
-<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {classes[status]}">
+<span
+  aria-label="Status: {status}"
+  class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium {classes[status]}"
+>
   {status}
 </span>

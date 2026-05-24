@@ -51,9 +51,10 @@
 <div class="flex flex-col gap-4">
   <ArticleFilters onsearch={onSearch} onfilter={onFilter} />
 
+  <div class="min-h-[400px]">
   {#if $loading}
     <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
-      <table class="w-full text-left">
+      <table aria-busy="true" aria-label="Loading articles" class="w-full text-left">
         <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
           <tr>
             <th scope="col" class={thClass}>Title</th>
@@ -114,6 +115,7 @@
   {:else}
     <div class="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700">
       <table class="w-full text-left">
+        <caption class="sr-only">Articles</caption>
         <thead class="border-b border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800">
           <tr>
             <th scope="col" class={thClass}>Title</th>
@@ -131,4 +133,5 @@
       </table>
     </div>
   {/if}
+  </div>
 </div>

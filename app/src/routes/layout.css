@@ -2,6 +2,10 @@
 @plugin '@tailwindcss/forms';
 @variant dark (&:where(.dark, .dark *));
 
+html {
+  scrollbar-gutter: stable;
+}
+
 *, *::before, *::after {
   transition-property: background-color, border-color, color;
   transition-duration: 300ms;
