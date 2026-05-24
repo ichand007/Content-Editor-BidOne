@@ -51,7 +51,7 @@ app/src/lib/
 
 ## Features
 
-- Article list with real-time search (by title or author) and status filter (Published / Draft)
+- Paginated article list (8 articles per page) with search and status filter — page resets automatically when filters change
 - Add, edit, and delete articles via modal form
 - Client-side form validation with per-field error messages
 - Loading, error, and empty states handled throughout
